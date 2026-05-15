@@ -1,11 +1,32 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import os
+import mimetypes
+
+
+CLIENT_DIR = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "client", "dist")
+)
 
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.end_headers()
-        self.wfile.write(b"tools dashboard")
+        if self.path == "/":
+            self.path = "/index.html"
+
+        file_path = os.path.normpath(os.path.join(CLIENT_DIR, self.path.lstrip("/")))
+
+        if file_path.startswith(CLIENT_DIR) and os.path.isfile(file_path):
+            self.send_response(200)
+            mime_type, _ = mimetypes.guess_type(file_path)
+            if mime_type:
+                self.send_header("Content-Type", mime_type)
+            self.end_headers()
+            with open(file_path, "rb") as f:
+                self.wfile.write(f.read())
+        else:
+            self.send_response(404)
+            self.end_headers()
+            self.wfile.write(b"Not Found")
 
 
 if __name__ == "__main__":
