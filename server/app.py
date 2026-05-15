@@ -24,9 +24,12 @@ class Handler(BaseHTTPRequestHandler):
             with open(file_path, "rb") as f:
                 self.wfile.write(f.read())
         else:
-            self.send_response(404)
+            index_path = os.path.join(CLIENT_DIR, "index.html")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html")
             self.end_headers()
-            self.wfile.write(b"Not Found")
+            with open(index_path, "rb") as f:
+                self.wfile.write(f.read())
 
 
 if __name__ == "__main__":
