@@ -20,7 +20,5 @@
 - For development use Vite dev server instead
 
 ## Notable
+- If you see changes that you didn't make, ignore them.
 
-- Tailwind v4: `@import "tailwindcss"` in CSS; no `tailwind.config.js`
-- No TypeScript — plain `.jsx` files
-- No tests or CI configured
